@@ -1,0 +1,105 @@
+---
+title: "Real Data Analysis"
+author: "Li Chen"
+date: '2022-12-05'
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+library(wooldridge)
+library(ggplot2)
+```
+
+```{r}
+dat <- card[,c(33,4,6,7,31,22,29,32,30,9,10,11)]
+dat <- na.omit(dat)
+```
+
+```{r}
+nrow(dat)
+```
+
+There are 1615 observations in total after removing observations with missing values.
+
+```{r}
+ggplot(dat,aes(x=educ,y=lwage))+geom_point(size=0.5)
+```
+
+```{r}
+ggplot(dat,aes(x=lwage))+geom_histogram(color="black", fill="white")
+```
+
+```{r}
+table(dat$educ)
+```
+
+```{r}
+table(dat$fatheduc)
+```
+
+```{r}
+table(dat$motheduc)
+```
+
+```{r}
+sum(dat$momdad14)/nrow(dat)
+sum(dat$sinmom14)/nrow(dat)
+sum(dat$step14)/nrow(dat)
+sum(dat$libcrd14)/nrow(dat)
+sum(dat$black)/nrow(dat)
+sum(dat$married)/nrow(dat)
+```
+
+```{r}
+ggplot(dat,aes(x=IQ))+geom_histogram(color="black", fill="white")
+```
+
+```{r}
+ggplot(dat,aes(x=exper))+geom_histogram(color="black", fill="white")
+```
+
+
+```{r}
+dat <- apply(dat,2,as.numeric)
+dat <- scale(dat)
+```
+
+
+```{r}
+## Outcome variable: lwage
+Y <- dat[,1,drop=FALSE]
+## Treatment variable: educ
+D <- dat[,2,drop=FALSE]
+## Potential IV set: fatheduc, motheduc, momdad14, sinmom14, step14,libcrd14
+Z <- dat[,3:5]
+## Variables used as covariates: IQ, black, exper, married
+X <- dat[,6:12]
+```
+
+
+
+```{r}
+## TSHT confidence interval
+tsht.result <- TSHT(Y,D,Z,X)
+tsht.result$ci
+```
+
+```{r}
+## POSI
+set.seed(1234)
+dmodz <- lm(D~Z+0)
+hat_D <- dmodz$fitted.values
+hat_D <- matrix(hat_D,ncol=1)
+hat_D <- cbind(hat_D,X)
+posi <- PoSIK1(hat_D,Z,modelSZ = 1:floor((ncol(Z)-1)/2),verbose = 0,Nsim = 100000)
+k <- summary(posi)[1,1]
+posi.result <- c(tsht.result$betaHat-k*sqrt(tsht.result$betaVarHat/nrow(Y)),tsht.result$betaHat+k*sqrt(tsht.result$betaVarHat/nrow(Y)))
+posi.result
+```
+
+
+
