@@ -1,6 +1,6 @@
 source("https://raw.githubusercontent.com/hyunseungkang/invalidIV/master/TSHT.R")
 source("https://raw.githubusercontent.com/hyunseungkang/invalidIV/master/JMCode.R")
-source("/Users/lichen/Dropbox/post_selection_inference/Code/PoSI.R",chdir = TRUE)
+source("PoSI.R",chdir = TRUE)
 
 ### Comparison among PoSI1 and PoSI
 
