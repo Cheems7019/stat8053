@@ -16,7 +16,9 @@ This repository contains an implementation of the course project for STAT8053
 
 ## Acknowledgement
 
-`PoSI.R` is adapted based on the code from \url{https://github.com/cran/PoSI} and \texttt{TSHT} implementation can be obtained from \url{https://github.com/hyunseungkang/invalidIV}.
+`PoSI.R` is adapted based on the code from <https://github.com/cran/PoSI>.
+
+ \texttt{TSHT} implementation can be obtained from <https://github.com/hyunseungkang/invalidIV>.
 
  **I would like to thank the authors of above open-sourced code.**
 
